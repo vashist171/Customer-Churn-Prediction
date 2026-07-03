@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BIChart } from "./Charts";
-import { Plus, Trash, Settings, Filter, Bookmark } from "lucide-react";
+import { Plus, Trash, Settings, Filter, Bookmark, Layers, Minimize2, Maximize2 } from "lucide-react";
 
 interface Widget {
   id: string;
@@ -22,8 +22,6 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
   ]);
 
   const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
-  
-  // Power BI Features State
   const [slicerFilter, setSlicerFilter] = useState<string>("");
   const [drillDownLevel, setDrillDownLevel] = useState<string>("Category");
   const [bookmarks, setBookmarks] = useState<Array<{ name: string; widgets: Widget[] }>>([]);
@@ -57,23 +55,17 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
   };
 
   const totalRows = datasetData ? datasetData.length : 0;
-  
-  // Custom calculated measure simulation
   const numericCols = columns.filter((c) => c.detected_type === "numeric").map((c) => c.name);
 
-  // Styling maps
+  // Modern Premium Finnova / iDraft Aesthetics Map
   const isDark = theme === "dark";
-  const bgCanvas = isDark ? "bg-radial-[at_top_right] from-[#1a122e] via-[#08070d] to-[#040406]" : "bg-[#fcfcff]";
-  const borderCanvas = isDark ? "border-[#d4af37]/20" : "border-slate-200";
-  const bgPanel = isDark ? "bg-[#14121f]/90 backdrop-blur-md" : "bg-white/90 backdrop-blur-md";
-  const textTitle = isDark ? "text-[#d4af37] font-semibold tracking-widest uppercase" : "text-slate-900 font-semibold uppercase";
+  const textTitle = isDark ? "text-white font-semibold tracking-wide" : "text-slate-900 font-semibold";
   const textLabel = isDark ? "text-slate-400 font-medium" : "text-slate-600 font-medium";
-  const bgWidget = isDark ? "bg-[#1c182a]/70 border-2 border-double border-[#d4af37]/20 hover:border-[#d4af37]/65 shadow-[0_0_15px_rgba(212,175,55,0.05)] hover:shadow-[0_0_25px_rgba(212,175,55,0.15)]" : "bg-white/80 border-2 border-slate-100 hover:border-blue-200 shadow-sm hover:shadow-md";
 
   return (
     <div className="flex flex-col h-full gap-6">
-      {/* Power BI Slicers & Toolbars */}
-      <div className={`flex flex-wrap items-center justify-between p-4 ${bgPanel} border ${borderCanvas} rounded-2xl gap-4 shadow-sm`}>
+      {/* Finnova Top Bar Header Slicer */}
+      <div className={`flex flex-wrap items-center justify-between p-4 ${isDark ? "bg-[#151322] border-[#29233b]" : "bg-white border-slate-200"} border-2 rounded-2xl gap-4 shadow-sm transition-all duration-300`}>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Filter size={16} className={textLabel} />
@@ -81,7 +73,7 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
             <select
               value={slicerFilter}
               onChange={(e) => setSlicerFilter(e.target.value)}
-              className={`text-xs rounded-lg px-2.5 py-1.5 ${isDark ? "bg-[#1f2937] text-white border-slate-700" : "bg-white text-slate-800 border-slate-300"} border focus:outline-none`}
+              className={`text-xs rounded-lg px-2.5 py-1.5 ${isDark ? "bg-[#1f1a30] text-white border-slate-700" : "bg-white text-slate-800 border-slate-300"} border focus:outline-none`}
             >
               <option value="">All Customers</option>
               <option value="high-churn">High Churn Risk (&gt;50%)</option>
@@ -93,7 +85,7 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
             <span className={`text-xs font-semibold uppercase tracking-wider ${textLabel}`}>Drill-down:</span>
             <button
               onClick={() => setDrillDownLevel(drillDownLevel === "Category" ? "Individual" : "Category")}
-              className={`px-3 py-1 text-xs rounded-lg border ${isDark ? "border-slate-700 text-slate-300" : "border-slate-300 text-slate-700"} hover:bg-blue-600/10`}
+              className={`px-3 py-1.5 text-xs rounded-lg border ${isDark ? "border-[#3e3458] text-slate-300 hover:bg-[#251e36]" : "border-slate-300 text-slate-700 hover:bg-slate-50"} transition-all`}
             >
               Level: {drillDownLevel}
             </button>
@@ -101,7 +93,6 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Quick theme action preview */}
           <button
             onClick={() => addWidget("KPI Card")}
             className="px-3.5 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-semibold flex items-center gap-1.5 transition"
@@ -112,7 +103,7 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
             onClick={() => addWidget("Bar Chart")}
             className="px-3.5 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-semibold flex items-center gap-1.5 transition"
           >
-            <Plus size={14} /> Bar
+            <Plus size={14} /> Bar Chart
           </button>
           <button
             onClick={() => addWidget("Donut Chart")}
@@ -123,8 +114,8 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
         </div>
       </div>
 
-      {/* Bookmarks Section */}
-      <div className={`p-4 ${bgPanel} border ${borderCanvas} rounded-2xl flex items-center justify-between gap-4 shadow-sm`}>
+      {/* Snapshots & Bookmarks Tool */}
+      <div className={`p-4 ${isDark ? "bg-[#151322] border-[#29233b]" : "bg-white border-slate-200"} border-2 rounded-2xl flex items-center justify-between gap-4 shadow-sm transition-all duration-300`}>
         <div className="flex items-center gap-2">
           <Bookmark size={16} className={textLabel} />
           <span className={`text-xs font-semibold uppercase tracking-wider ${textLabel}`}>Bookmarks & Snapshots:</span>
@@ -133,7 +124,7 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
               <button
                 key={idx}
                 onClick={() => applyBookmark(b)}
-                className={`px-2.5 py-1 text-xs rounded border ${isDark ? "bg-[#1f2937] text-white border-slate-700" : "bg-white text-slate-700 border-slate-300"} hover:bg-blue-500/10`}
+                className={`px-2.5 py-1 text-xs rounded border ${isDark ? "bg-[#1f1a30] text-white border-slate-700" : "bg-white text-slate-750 border-slate-300"} hover:bg-blue-500/10 transition`}
               >
                 {b.name}
               </button>
@@ -146,20 +137,21 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
             placeholder="Bookmark Name"
             value={bookmarkName}
             onChange={(e) => setBookmarkName(e.target.value)}
-            className={`text-xs rounded px-2.5 py-1 ${isDark ? "bg-[#1f2937] text-white border-slate-700" : "bg-white text-slate-800 border-slate-300"} border focus:outline-none`}
+            className={`text-xs rounded px-2.5 py-1 ${isDark ? "bg-[#1f1a30] text-white border-slate-700" : "bg-white text-slate-800 border-slate-300"} border focus:outline-none`}
           />
           <button
             onClick={saveBookmark}
-            className="px-3 py-1 text-xs bg-slate-600 hover:bg-slate-500 text-white rounded font-medium"
+            className="px-3.5 py-1 text-xs bg-slate-600 hover:bg-slate-50 text-white rounded font-medium transition"
           >
             Save View
           </button>
         </div>
       </div>
 
-      {/* Canvas workspace layout */}
-      <div className="flex gap-4 flex-1 overflow-hidden min-h-[500px]">
-        <div className={`flex-1 grid grid-cols-12 gap-4 auto-rows-[90px] overflow-y-auto p-6 ${bgCanvas} border ${borderCanvas} rounded-2xl relative shadow-inner`}>
+      {/* Finnova Clean Floating Canvas & Side Properties */}
+      <div className="flex gap-6 flex-1 overflow-hidden min-h-[500px]">
+        {/* Canvas area - clean background with premium double outer card border */}
+        <div className={`flex-1 grid grid-cols-12 gap-6 auto-rows-[90px] overflow-y-auto p-6 ${isDark ? "bg-[#0b0a0f] border-[#29233b]" : "bg-slate-50 border-slate-200"} border-2 rounded-3xl relative shadow-inner`}>
           {widgets.map((widget) => {
             let chartData: any = {};
             if (widget.type === "KPI Card") {
@@ -185,9 +177,11 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
                   gridColumn: `span ${widget.w}`,
                   gridRow: `span ${widget.h}`
                 }}
-                className={`relative group p-1.5 ${bgWidget} rounded-2xl border ${
-                  selectedWidget?.id === widget.id ? "border-blue-500 shadow-md" : isDark ? "border-slate-800" : "border-slate-200"
-                } overflow-hidden transition-all duration-200`}
+                className={`relative group p-2.5 ${
+                  isDark 
+                    ? "bg-[#141221] border border-[#2b243c] hover:border-[#d4af37]/40 shadow-sm" 
+                    : "bg-white border border-slate-200 hover:border-blue-400 shadow-sm"
+                } rounded-2xl overflow-hidden transition-all duration-300 hover:translate-y-[-2px]`}
                 onClick={() => setSelectedWidget(widget)}
               >
                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -196,7 +190,7 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
                       e.stopPropagation();
                       removeWidget(widget.id);
                     }}
-                    className="p-1 bg-red-600/90 hover:bg-red-600 text-white rounded-lg transition"
+                    className="p-1.5 bg-red-600/90 hover:bg-red-600 text-white rounded-lg transition"
                   >
                     <Trash size={12} />
                   </button>
@@ -209,11 +203,11 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
           })}
         </div>
 
-        {/* Builder Sidebar options */}
+        {/* Sidebar properties pane - frosted float */}
         {selectedWidget && (
-          <div className={`w-80 p-5 ${bgPanel} border ${borderCanvas} rounded-2xl flex flex-col gap-4 shadow-lg`}>
+          <div className={`w-80 p-5 ${isDark ? "bg-[#141221] border-[#29233b]" : "bg-white border-slate-200"} border-2 rounded-3xl flex flex-col gap-4 shadow-lg`}>
             <h3 className={`font-bold text-sm flex items-center gap-1.5 ${textTitle}`}>
-              <Settings size={16} /> Properties Builder
+              <Layers size={16} /> Properties Panel
             </h3>
             <div className="flex flex-col gap-1.5">
               <label className={`text-[10px] font-semibold uppercase tracking-wider ${textLabel}`}>Widget Title</label>
@@ -227,12 +221,12 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
                   setWidgets(updated);
                   setSelectedWidget({ ...selectedWidget, title: e.target.value });
                 }}
-                className={`p-2 rounded text-xs focus:outline-none ${isDark ? "bg-[#1f2937] text-white border-slate-700" : "bg-slate-100 text-slate-900 border-slate-300"} border`}
+                className={`p-2 rounded-lg text-xs focus:outline-none ${isDark ? "bg-[#1f1a30] text-white border-slate-700" : "bg-slate-100 text-slate-900 border-slate-300"} border`}
               />
             </div>
             
             <div className="flex flex-col gap-1.5">
-              <label className={`text-[10px] font-semibold uppercase tracking-wider ${textLabel}`}>Calculated Column Measure</label>
+              <label className={`text-[10px] font-semibold uppercase tracking-wider ${textLabel}`}>Calculated Measure</label>
               <select
                 value={selectedWidget.measureCol || ""}
                 onChange={(e) => {
@@ -243,7 +237,7 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
                   setWidgets(updated);
                   setSelectedWidget({ ...selectedWidget, measureCol: val });
                 }}
-                className={`p-2 rounded text-xs focus:outline-none ${isDark ? "bg-[#1f2937] text-white border-slate-700" : "bg-slate-100 text-slate-900 border-slate-300"} border`}
+                className={`p-2 rounded-lg text-xs focus:outline-none ${isDark ? "bg-[#1f1a30] text-white border-slate-700" : "bg-slate-100 text-slate-900 border-slate-300"} border`}
               >
                 <option value="">None (Count Aggregation)</option>
                 {numericCols.map((c) => (
@@ -268,7 +262,7 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
                     setWidgets(updated);
                     setSelectedWidget({ ...selectedWidget, w: val });
                   }}
-                  className={`p-2 rounded text-xs focus:outline-none ${isDark ? "bg-[#1f2937] text-white border-slate-700" : "bg-slate-100 text-slate-900 border-slate-300"} border`}
+                  className={`p-2 rounded-lg text-xs focus:outline-none ${isDark ? "bg-[#1f1a30] text-white border-slate-700" : "bg-slate-100 text-slate-900 border-slate-300"} border`}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -286,7 +280,7 @@ export const DashboardBuilder: React.FC<{ datasetData: any; columns: any[]; them
                     setWidgets(updated);
                     setSelectedWidget({ ...selectedWidget, h: val });
                   }}
-                  className={`p-2 rounded text-xs focus:outline-none ${isDark ? "bg-[#1f2937] text-white border-slate-700" : "bg-slate-100 text-slate-900 border-slate-300"} border`}
+                  className={`p-2 rounded-lg text-xs focus:outline-none ${isDark ? "bg-[#1f1a30] text-white border-slate-700" : "bg-slate-100 text-slate-900 border-slate-300"} border`}
                 />
               </div>
             </div>
